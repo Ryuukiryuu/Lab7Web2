@@ -1216,7 +1216,7 @@ php spark routes
 
 **Screenshot — Output `php spark routes` di terminal:**
 
-![php spark routes](screenshot-spark-routes)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/760ea20e-a1f5-4535-828f-b0af16280493" />
 
 ---
 
@@ -1237,7 +1237,7 @@ php spark serve
 
 **Screenshot — Postman GET /post:**
 
-![GET /post](screenshot-get-all)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f8b549b2-5694-4c1a-8bbb-5f874abb3250" />
 
 ---
 
@@ -1248,7 +1248,7 @@ php spark serve
 
 **Screenshot — Postman GET /post/{id}:**
 
-![GET /post/1](screenshot-get-by-id)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/b67da3f4-94df-49c5-8d3f-cf41106b7c8f" />
 
 ---
 
@@ -1262,7 +1262,7 @@ php spark serve
 
 **Screenshot — Postman POST /post:**
 
-![POST /post](screenshot-post-create)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/5ac6c7c3-749e-42d5-b930-99d975c331d7" />
 
 ---
 
@@ -1276,7 +1276,7 @@ php spark serve
 
 **Screenshot — Postman PUT /post/{id}:**
 
-![PUT /post/1](screenshot-put-update)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/664a8abc-6d15-4a9a-ae53-9f80f565babd" />
 
 ---
 
@@ -1287,7 +1287,8 @@ php spark serve
 
 **Screenshot — Postman DELETE /post/{id}:**
 
-![DELETE /post/1](screenshot-delete)
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0843b4a1-b699-4784-bb4b-1e4fd33ec3cf" />
+
 
 ---
 
