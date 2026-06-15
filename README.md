@@ -1298,4 +1298,637 @@ Pada praktikum ini berhasil dibangun REST API menggunakan CodeIgniter 4 `Resourc
 
 ---
 
+# Lab11Web_VueJS — Praktikum 11–14
+
+| | |
+|---|---|
+| **Nama** | Wahyu Andika |
+| **NIM** | 312410182 |
+| **Kelas** | I241B |
+| **Mata Kuliah** | Pemrograman Web 2 |
+| **Universitas** | Universitas Pelita Bangsa |
+
+---
+
+## Daftar Praktikum
+
+- [Praktikum 11 — VueJS Dasar & Integrasi REST API](#praktikum-11--vuejs-dasar--integrasi-rest-api)
+- [Praktikum 12 — VueJS Komponen dan Routing (SPA)](#praktikum-12--vuejs-komponen-dan-routing-spa)
+- [Praktikum 13 — VueJS Autentikasi dan Navigation Guards](#praktikum-13--vuejs-autentikasi-dan-navigation-guards)
+- [Praktikum 14 — Keamanan API, Token Authentication, dan Axios Interceptors](#praktikum-14--keamanan-api-token-authentication-dan-axios-interceptors)
+
+---
+
+# Praktikum 11 — VueJS Dasar & Integrasi REST API
+
+## Tujuan Praktikum
+
+1. Mahasiswa mampu memahami konsep dasar API.
+2. Mahasiswa mampu memahami konsep dasar Framework VueJS.
+3. Mahasiswa mampu membuat Frontend API menggunakan Framework VueJS 3.
+
+---
+
+## Apa itu VueJS?
+
+VueJS adalah framework JavaScript progresif untuk membangun antarmuka pengguna yang interaktif. Framework ini berfokus pada *view layer* dan dapat diintegrasikan dengan library lain secara fleksibel. Fitur utamanya mencakup *reactive data binding* dan *component-based architecture*.
+
+Dokumentasi lengkap: [https://vuejs.org/guide/introduction](https://vuejs.org/guide/introduction)
+
+---
+
+## Langkah-Langkah Praktikum
+
+### 1. Persiapan Library via CDN
+
+Tambahkan library berikut pada file `index.html`:
+
+```html
+<!-- VueJS 3 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<!-- Axios untuk HTTP request ke REST API -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+```
+
+---
+
+### 2. Struktur Direktori
+
+```
+lab8_vuejs/
+├── index.html
+└── assets/
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── app.js
+```
+
+---
+
+### 3. Membuat `index.html`
+
+File HTML utama mendefinisikan template Vue dengan direktif `v-for` untuk merender daftar artikel secara dinamis dari response API.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend Vuejs</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Daftar Artikel</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Judul</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(row, index) in artikel">
+                    <td class="center-text">{{ row.id }}</td>
+                    <td>{{ row.judul }}</td>
+                    <td>{{ statusText(row.status) }}</td>
+                    <td class="center-text">
+                        <a href="#" @click="edit(row)">Edit</a>
+                        <a href="#" @click="hapus(index, row.id)">Hapus</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
+```
+
+---
+
+### 4. Membuat `assets/js/app.js`
+
+```javascript
+const { createApp } = Vue
+const apiUrl = 'http://localhost/lab11_ci/ci4/public'
+
+createApp({
+    data() {
+        return {
+            artikel: ''
+        }
+    },
+    mounted() {
+        this.loadData()
+    },
+    methods: {
+        loadData() {
+            axios.get(apiUrl + '/post')
+                .then(response => {
+                    this.artikel = response.data.data
+                })
+                .catch(error => console.log(error))
+        },
+        statusText(status) {
+            return status == 1 ? 'Publish' : 'Draft'
+        }
+    },
+}).mount('#app')
+```
+
+---
+
+### 5. Menambahkan Form Tambah dan Ubah Data
+
+Tambahkan modal form untuk operasi tambah dan edit artikel dengan direktif `v-if`, `v-model`, dan `@submit.prevent`.
+
+---
+
+## Hasil Praktikum
+
+### Tampilan Daftar Artikel
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/c508db7a-5533-408f-a9ab-202a3cb8c5c8" />
+
+### Form Tambah Data
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e445ea09-773c-4c5e-96fd-4a72dbb2a7dd" />
+
+---
+
+# Praktikum 12 — VueJS Komponen dan Routing (SPA)
+
+## Tujuan Praktikum
+
+1. Mahasiswa mampu memahami konsep komponen pada Framework VueJS.
+2. Mahasiswa mampu memahami konsep Client-Side Routing untuk membangun Single Page Application (SPA).
+3. Mahasiswa mampu mengimplementasikan komponen dan routing menggunakan Vue Router berbasis CDN.
+
+---
+
+## Apa itu Vue Components dan Vue Router?
+
+**Vue Components** adalah elemen UI modular yang dapat digunakan kembali (*reusable*). Komponen memungkinkan pemecahan antarmuka menjadi bagian-bagian terisolasi sehingga kode lebih bersih dan mudah dikelola.
+
+**Vue Router** adalah library resmi VueJS untuk menangani navigasi halaman di sisi klien. Berbeda dengan web tradisional yang me-refresh seluruh halaman setiap klik tautan, Vue Router memungkinkan perpindahan tampilan tanpa reload browser — menghasilkan pengalaman yang dikenal sebagai **Single Page Application (SPA)**.
+
+---
+
+## Langkah-Langkah Praktikum
+
+### 1. Menambahkan Vue Router via CDN
+
+```html
+<script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+```
+
+---
+
+### 2. Struktur Direktori Baru
+
+```
+lab8_vuejs/
+├── index.html
+└── assets/
+    ├── css/
+    │   └── style.css
+    └── js/
+        ├── app.js
+        └── components/
+            ├── Home.js
+            ├── Artikel.js
+            └── About.js
+```
+
+---
+
+### 3. Membuat Komponen `Home.js`
+
+```javascript
+const Home = {
+    template: `
+        <div class="home-container">
+            <h2>Selamat Datang di Portal Admin Artikel</h2>
+            <p>Gunakan menu navigasi di atas untuk mengelola data artikel secara
+            real-time memanfaatkan RESTful API CodeIgniter 4 dan VueJS.</p>
+        </div>
+    `
+};
+```
+
+---
+
+### 4. Memindahkan Logika CRUD ke Komponen `Artikel.js`
+
+Seluruh logika CRUD yang sebelumnya ada di `app.js` dipindahkan ke komponen `Artikel.js` sebagai objek komponen terisolasi dengan properti `template`, `data()`, dan `methods`.
+
+---
+
+### 5. Mengonfigurasi Vue Router pada `app.js`
+
+```javascript
+const { createApp } = Vue;
+const { createRouter, createWebHashHistory } = VueRouter;
+
+const routes = [
+    { path: '/',        component: Home    },
+    { path: '/artikel', component: Artikel },
+    { path: '/about',   component: About   }
+];
+
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes
+});
+
+const app = createApp({});
+app.use(router);
+app.mount('#app');
+```
+
+---
+
+### 6. Memodifikasi `index.html` dengan `<router-link>` dan `<router-view>`
+
+```html
+<nav class="nav-menu">
+    <router-link to="/">Beranda</router-link> |
+    <router-link to="/artikel">Kelola Artikel</router-link> |
+    <router-link to="/about">About</router-link>
+</nav>
+<main>
+    <router-view></router-view>
+</main>
+```
+
+---
+
+## Hasil Praktikum
+
+### Halaman Beranda (Home Component)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/6e582a6e-fd24-4917-8e19-5fea869fb1e7" />
+
+### Halaman Kelola Artikel (Artikel Component)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/eac717f9-4c22-4804-8ede-8675eb2b8ef4" />
+
+### Halaman About
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/43de6e72-24cc-47c7-9015-892dccd8cb9d" />
+
+### Navigasi Aktif (router-link-exact-active)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/71442c51-0eae-4053-a441-1d509e337919" />
+
+---
+
+# Praktikum 13 — VueJS Autentikasi dan Navigation Guards
+
+## Tujuan Praktikum
+
+1. Mahasiswa mampu memahami konsep keamanan dan pembatasan hak akses rute pada sisi klien.
+2. Mahasiswa mampu memahami konsep Navigation Guards (`beforeEach`) pada Vue Router.
+3. Mahasiswa mampu membuat API Endpoint autentikasi pada backend CodeIgniter 4.
+4. Mahasiswa mampu mengimplementasikan modul Login dan proteksi halaman admin pada SPA.
+
+---
+
+## Apa itu Navigation Guards?
+
+Dalam aplikasi SPA, seluruh struktur halaman sudah dimuat di awal oleh browser. Untuk mengamankan rute tertentu dari pengguna yang belum terautentikasi, Vue Router menyediakan fungsi `router.beforeEach()` yang bertindak sebagai *interceptor* perpindahan rute. Fungsi ini memeriksa status login (dari `localStorage`) sebelum mengizinkan rute ditampilkan.
+
+---
+
+## Langkah-Langkah Praktikum
+
+### TAHAP 1 — Backend CI4: Membuat API Endpoint Login
+
+#### 1.1 Membuat Auth Controller
+
+Buat file `app/Controllers/Api/Auth.php`:
+
+```php
+<?php
+
+namespace App\Controllers\Api;
+
+use CodeIgniter\RESTful\ResourceController;
+use App\Models\UserModel;
+
+class Auth extends ResourceController
+{
+    protected $format = 'json';
+
+    public function login()
+    {
+        $username = $this->request->getVar('username');
+        $password = $this->request->getVar('password');
+
+        $model = new UserModel();
+        $user  = $model->where('username', $username)
+                       ->orWhere('useremail', $username)
+                       ->first();
+
+        if ($user && password_verify($password, $user['userpassword'])) {
+            return $this->respond([
+                'status'   => 200,
+                'error'    => null,
+                'messages' => 'Login Berhasil',
+                'data'     => [
+                    'id'       => $user['id'],
+                    'username' => $user['username'],
+                    'token'    => base64_encode('TOKEN-SECRET-' . $user['username'])
+                ]
+            ], 200);
+        }
+
+        return $this->failUnauthorized('Username atau Password yang Anda masukkan salah.');
+    }
+}
+```
+
+#### 1.2 Mendaftarkan Route Login
+
+Tambahkan di `app/Config/Routes.php`:
+
+```php
+$routes->post('api/login', 'Api\Auth::login');
+```
+
+---
+
+### TAHAP 2 — Frontend VueJS: Komponen Login dan Navigation Guards
+
+#### 2.1 Membuat `components/Login.js`
+
+Komponen ini menampilkan form login dan mengirimkan kredensial ke API backend menggunakan Axios.
+
+```javascript
+const Login = {
+    template: `...`,
+    methods: {
+        handleLogin() {
+            axios.post(apiUrl + '/api/login', {
+                username: this.username,
+                password: this.password,
+            })
+            .then(response => {
+                if (response.data.status === 200) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userToken', response.data.data.token);
+                    window.appStore.isLoggedIn = true;
+                    this.$router.push('/artikel');
+                }
+            })
+            .catch(error => {
+                this.errorMessage = error.response?.data?.messages
+                    || 'Terjadi kesalahan jaringan atau server.';
+            });
+        }
+    }
+};
+```
+
+#### 2.2 Menambahkan Navigation Guards di `app.js`
+
+```javascript
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+        alert('Akses Ditolak! Anda harus login terlebih dahulu.');
+        next('/login');
+    } else {
+        next();
+    }
+});
+```
+
+#### 2.3 Menandai Rute yang Diproteksi
+
+```javascript
+const routes = [
+    { path: '/',        component: Home  },
+    { path: '/login',   component: Login },
+    { path: '/about',   component: About,   meta: { requiresAuth: true } },
+    { path: '/artikel', component: Artikel, meta: { requiresAuth: true } },
+];
+```
+
+---
+
+## Hasil Praktikum
+
+### Skenario A — Akses Ditolak (Belum Login)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/d24c3207-c202-4e78-aead-8874d5da4079" />
+
+### Form Login
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/924a2298-104b-49a1-87f8-3f0e513fa2ec" />
+
+### Skenario B — Login Berhasil
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/a90d78f5-127d-4e23-86e7-a69c3dd1c3a8" />
+
+### Logout
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/8e9a28c5-83fe-45f0-9c98-8740486e013c" />
+
+
+---
+
+## Analisis Alur Kerja
+
+### Alur `router.beforeEach`
+
+```
+Pengguna klik menu → beforeEach dipanggil → cek localStorage('isLoggedIn')
+    ├── true  → next() → halaman ditampilkan
+    └── false → alert + next('/login') → redirect ke form login
+```
+
+### Alur Axios POST Login
+
+```
+Form submit → axios.post('/api/login') → CI4 Auth::login()
+    → UserModel query DB → password_verify()
+    ├── sukses → respond token → localStorage.set → router.push('/artikel')
+    └── gagal  → failUnauthorized(401) → error.response.data.messages
+```
+
+---
+
+# Praktikum 14 — Keamanan API, Token Authentication, dan Axios Interceptors
+
+## Tujuan Praktikum
+
+1. Mahasiswa mampu memahami konsep keamanan RESTful API menggunakan Token-Based Authentication.
+2. Mahasiswa mampu mengimplementasikan Filters pada CodeIgniter 4 untuk mengamankan endpoint API.
+3. Mahasiswa mampu memahami dan mengimplementasikan Axios Interceptors pada aplikasi Frontend VueJS.
+4. Mahasiswa mampu melakukan pengujian transmisi data yang aman antara Frontend SPA dan Backend API.
+
+---
+
+## Teori Singkat
+
+Pada praktikum sebelumnya, proteksi hanya diterapkan di sisi klien (Navigation Guards). Proteksi ini belum cukup karena endpoint API masih bisa ditembak langsung via Postman atau tools sejenisnya tanpa token.
+
+**Token-Based Authentication** menambahkan lapisan keamanan di sisi server: setiap request manipulasi data (POST/PUT/DELETE) wajib menyertakan token pada HTTP Header `Authorization: Bearer <token>`. Jika token tidak ada atau tidak valid, server menolak dengan response `401 Unauthorized`.
+
+**Axios Interceptors** berfungsi sebagai "jembatan otomatis" yang menyuntikkan token dari `localStorage` ke dalam setiap request keluar tanpa harus menuliskan kode pelampiran token secara manual di tiap fungsi Axios.
+
+---
+
+## Langkah-Langkah Praktikum
+
+### TAHAP 1 — Backend CI4: Membuat API Auth Filter
+
+#### 1.1 Membuat `app/Filters/ApiAuthFilter.php`
+
+```php
+<?php
+
+namespace App\Filters;
+
+use CodeIgniter\Filters\FilterInterface;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Config\Services;
+
+class ApiAuthFilter implements FilterInterface
+{
+    public function before(RequestInterface $request, $arguments = null)
+    {
+        $authHeader = $request->getServer('HTTP_AUTHORIZATION');
+
+        if (!$authHeader) {
+            $response = Services::response();
+            $response->setStatusCode(401);
+            return $response->setJSON([
+                'status'   => 401,
+                'error'    => 401,
+                'messages' => 'Akses Ditolak. Token tidak ditemukan pada request!',
+            ]);
+        }
+
+        $token = null;
+        if (preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+            $token = $matches[1];
+        }
+
+        if (!$token || empty($token)) {
+            $response = Services::response();
+            $response->setStatusCode(401);
+            return $response->setJSON([
+                'status'   => 401,
+                'error'    => 401,
+                'messages' => 'Sesi Token tidak valid atau kedaluwarsa!',
+            ]);
+        }
+    }
+
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
+    {
+        // tidak diperlukan
+    }
+}
+```
+
+#### 1.2 Mendaftarkan Filter di `app/Config/Filters.php`
+
+```php
+public array $aliases = [
+    // ... filter lainnya ...
+    'apiauth' => \App\Filters\ApiAuthFilter::class,
+];
+```
+
+#### 1.3 Menerapkan Filter ke Route Artikel
+
+```php
+// GET boleh tanpa token
+$routes->get('post', 'Post::index');
+$routes->get('post/(:num)', 'Post::show/$1');
+
+// POST, PUT, DELETE wajib token
+$routes->post('post', 'Post::create', ['filter' => 'apiauth']);
+$routes->put('post/(:num)', 'Post::update/$1', ['filter' => 'apiauth']);
+$routes->delete('post/(:num)', 'Post::delete/$1', ['filter' => 'apiauth']);
+```
+
+---
+
+### TAHAP 2 — Frontend VueJS: Implementasi Axios Interceptors
+
+Tambahkan konfigurasi interceptor di `assets/js/app.js` sebelum inisialisasi router:
+
+```javascript
+// Request Interceptor — suntik token otomatis
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('userToken');
+        if (token) {
+            config.headers['Authorization'] = 'Bearer ' + token;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+// Response Interceptor — tangkap 401 global
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            alert('Sesi Anda telah berakhir. Silakan login kembali.');
+            localStorage.clear();
+            store.isLoggedIn = false;
+            window.location.href = '#/login';
+        }
+        return Promise.reject(error);
+    }
+);
+```
+
+---
+
+## Hasil Praktikum
+
+### Uji Penolakan 401 via Postman (Tanpa Token)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/5d944b62-d6ac-4c7f-89fc-279c4345abc9" />
+
+### Token Tersuntik Otomatis (Browser DevTools Network)
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/aa495dc3-15af-4b53-a99f-d041e4900571" />
+
+### Operasi CRUD Berhasil Setelah Login
+
+[SCREENSHOT — Tambah/Edit/Hapus artikel berjalan sukses karena token dikirim via Interceptors]
+
+---
+
+## Kesimpulan
+
+| Aspek | Vue Router Navigation Guards | CodeIgniter Filters |
+|---|---|---|
+| **Sisi perlindungan** | Sisi klien (browser) | Sisi server |
+| **Yang dilindungi** | Tampilan/rute halaman | Endpoint API |
+| **Cara kerja** | Cek `localStorage` sebelum render | Cek HTTP Header sebelum proses request |
+| **Bisa dibypass?** | Ya, via manipulasi `localStorage` | Tidak, token harus valid di server |
+| **Fungsi utama** | UX — cegah akses halaman admin | Security — cegah manipulasi data ilegal |
+
+**Kesimpulan:** Navigation Guards dan CodeIgniter Filters bukan pengganti satu sama lain, melainkan dua lapisan keamanan yang saling melengkapi. Guards melindungi tampilan, Filters melindungi data. Aplikasi yang aman membutuhkan keduanya.
+
+---
+
 *&copy; 2026 — Wahyu Andika · NIM 312410182 · Universitas Pelita Bangsa*
