@@ -1911,10 +1911,6 @@ axios.interceptors.response.use(
 
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/aa495dc3-15af-4b53-a99f-d041e4900571" />
 
-### Operasi CRUD Berhasil Setelah Login
-
-[SCREENSHOT — Tambah/Edit/Hapus artikel berjalan sukses karena token dikirim via Interceptors]
-
 ---
 
 ## Kesimpulan
