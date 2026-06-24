@@ -1926,5 +1926,71 @@ axios.interceptors.response.use(
 **Kesimpulan:** Navigation Guards dan CodeIgniter Filters bukan pengganti satu sama lain, melainkan dua lapisan keamanan yang saling melengkapi. Guards melindungi tampilan, Filters melindungi data. Aplikasi yang aman membutuhkan keduanya.
 
 ---
+**Struktur Folder Akhir**
 
+htdocs/
+├── lab11_ci/
+│   └── ci4/                                  ← Backend CodeIgniter 4
+│       ├── .env
+│       ├── app/
+│       │   ├── Cells/
+│       │   │   └── ArtikelTerkini.php         ← Praktikum 3
+│       │   ├── Config/
+│       │   │   ├── Filters.php               ← Praktikum 14 (daftarkan alias)
+│       │   │   └── Routes.php                ← Semua praktikum
+│       │   ├── Controllers/
+│       │   │   ├── Api/
+│       │   │   │   └── Auth.php              ← Praktikum 13
+│       │   │   ├── Artikel.php               ← Praktikum 2, 5, 6, 7, 9
+│       │   │   ├── AjaxController.php        ← Praktikum 8
+│       │   │   ├── Home.php                  ← Praktikum 1
+│       │   │   ├── Page.php                  ← Praktikum 1
+│       │   │   ├── Post.php                  ← Praktikum 10, 14
+│       │   │   └── User.php                  ← Praktikum 4
+│       │   ├── Database/
+│       │   │   └── Seeds/
+│       │   │       └── UserSeeder.php        ← Praktikum 4
+│       │   ├── Filters/
+│       │   │   ├── ApiAuthFilter.php         ← Praktikum 14
+│       │   │   └── AuthFilter.php            ← Praktikum 4
+│       │   ├── Models/
+│       │   │   ├── ArtikelModel.php          ← Praktikum 2
+│       │   │   ├── KategoriModel.php         ← Praktikum 6
+│       │   │   └── UserModel.php             ← Praktikum 4
+│       │   └── Views/
+│       │       ├── artikel/
+│       │       │   ├── admin_index.php       ← Praktikum 2, 5, 6, 9
+│       │       │   ├── detail.php            ← Praktikum 3
+│       │       │   ├── form_add.php          ← Praktikum 7
+│       │       │   ├── form_edit.php         ← Praktikum 7
+│       │       │   └── index.php             ← Praktikum 3
+│       │       ├── components/
+│       │       │   └── artikel_terkini.php   ← Praktikum 3
+│       │       ├── layout/
+│       │       │   └── main.php              ← Praktikum 3
+│       │       ├── template/
+│       │       │   ├── footer.php            ← Praktikum 1
+│       │       │   └── header.php            ← Praktikum 1
+│       │       ├── user/
+│       │       │   └── login.php             ← Praktikum 4
+│       │       ├── about.php                 ← Praktikum 1
+│       │       ├── contact.php               ← Praktikum 1
+│       │       └── faqs.php                  ← Praktikum 1
+│       └── public/
+│           ├── gambar/                       ← Praktikum 7 (upload storage)
+│           └── index.php
+│
+└── lab8_vuejs/                               ← Frontend VueJS (Praktikum 11–14)
+    ├── index.html
+    └── assets/
+        ├── css/
+        │   └── style.css
+        └── js/
+            ├── app.js                        ← Router + Interceptors + Store
+            └── components/
+                ├── About.js                  ← Praktikum 12
+                ├── Artikel.js                ← Praktikum 12
+                ├── Home.js                   ← Praktikum 12
+                └── Login.js                  ← Praktikum 13
+                
 *&copy; 2026 — Wahyu Andika · NIM 312410182 · Universitas Pelita Bangsa*
