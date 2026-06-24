@@ -1928,6 +1928,7 @@ axios.interceptors.response.use(
 ---
 **Struktur Folder Akhir**
 
+```
 htdocs/
 ├── lab11_ci/
 │   └── ci4/                                  ← Backend CodeIgniter 4
@@ -1992,5 +1993,6 @@ htdocs/
                 ├── Artikel.js                ← Praktikum 12
                 ├── Home.js                   ← Praktikum 12
                 └── Login.js                  ← Praktikum 13
+                ```
                 
 *&copy; 2026 — Wahyu Andika · NIM 312410182 · Universitas Pelita Bangsa*
